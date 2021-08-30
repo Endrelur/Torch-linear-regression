@@ -1,6 +1,6 @@
 import csv
 import os.path
-import linear2d
+import linear_regression
 
 debug = False
 print("** linear regression v1 **")
@@ -38,7 +38,7 @@ while not gotfile :
     else : 
         print("ERROR: the file should be a .csv file")
 
-linear2d.performLinearRegression(data)
+linear_regression.performLinearRegression(data)
 
 
 
