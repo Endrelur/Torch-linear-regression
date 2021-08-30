@@ -1,7 +1,6 @@
 import csv
 import os.path
 import linear2d
-import linear3d
 
 debug = False
 print("** linear regression v1 **")
@@ -26,7 +25,7 @@ while not gotfile :
     print("Type in the full filename of the csv datafile:")
   #  fileName = input("filename: ")
   #TODO: use input
-    fileName = "length_weight.csv"
+    fileName = "day_length_weight.csv"
     if fileName.endswith(".csv") :
 
         fullPath = os.path.dirname(os.path.abspath(__file__))+'/data/' + fileName
@@ -39,8 +38,7 @@ while not gotfile :
     else : 
         print("ERROR: the file should be a .csv file")
 
-if(len(data[0]) == 2) :
-    linear2d.performLinearRegression(data)
+linear2d.performLinearRegression(data)
 
 
 

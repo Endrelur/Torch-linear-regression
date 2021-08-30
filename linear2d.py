@@ -1,33 +1,34 @@
 import torch
 import matplotlib.pyplot as plt
 import torch.nn.functional as function
+from mpl_toolkits import mplot3d
+
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-class Model :
+class model_2d :
     def __init__(self) :
-        self.W = torch.tensor([[0.0]], requires_grad=True, device=device)  # requires_grad enables calculation of gradients
-        self.b = torch.tensor([[0.0]], requires_grad=True, device=device)
+        self.W = torch.zeros(1,1, dtype=torch.float32,device=device,requires_grad=True) # requires_grad enables calculation of gradients
+        self.b = torch.zeros(1,1, dtype=torch.float32,device=device,requires_grad=True)
 
-    # Predictor
     def f(self, x):
-        return x @ self.W + self.b  # @ corresponds to matrix multiplication
+        return x @ self.W + self.b  
 
-    # Uses Mean Squared Error
     def loss(self, x, y):
-        return function.mse_loss(self.f(x), y)  # Can also use torch.nn.functional.mse_loss(self.f(x), y) to possibly increase numberical stability
+        return function.mse_loss(self.f(x), y)  
 
-def performLinearRegression(dataList) :
+def linear2d (data_list) :
+    
     epoch_amount = 1000000
     step_size = 0.0001
 
     print("performing two-dimensional linear regression using "+ device.type)
     print("with " + str(epoch_amount) + " epochs, and a step size of: " + str(step_size))
-    model = Model()
-    headers = dataList.pop(0)
+    model = model_2d()
+    headers = data_list.pop(0)
     x_data = []
     y_data = []
-    for row in dataList:
+    for row in data_list:
             x_data.append(float(row[0]))
             y_data.append(float(row[1]))
  
@@ -63,3 +64,72 @@ def performLinearRegression(dataList) :
     plt.plot(x1, model.f(x1).detach(), label='$\\hat y = f(x) = xW+b$')
     plt.legend()
     plt.show()
+
+class model_3d :
+    def __init__(self) :
+        self.W = torch.zeros(2,1,dtype=torch.float32,device=device,requires_grad=True)
+        self.b = torch.zeros(1,1, dtype=torch.float32,device=device,requires_grad=True)
+
+    def f(self, x):
+        return x @ self.W + self.b  
+
+    def loss(self, x, y):
+        return function.mse_loss(self.f(x), y)  
+
+
+def linear3d(data_list) :
+
+    epoch_amount = 10000
+    step_size = 0.0001
+
+    print("performing three-dimensional linear regression using "+ device.type)
+    print("with " + str(epoch_amount) + " epochs, and a step size of: " + str(step_size))
+    model = model_3d()
+    headers = data_list.pop(0)
+    x_data = []
+    y_data = []
+    for row in data_list:
+            x_data.append([float(row[0]),float(row[1])])
+            y_data.append([float(row[2])])
+ 
+    x = torch.tensor(x_data,dtype=torch.float32, device=device).reshape(-1,2)
+    y = torch.tensor(y_data,dtype=torch.float32, device=device).reshape(-1,1)
+
+    optimizer = torch.optim.SGD([model.W,model.b],step_size)
+
+    
+    frac = 100/epoch_amount
+    current = 0
+
+    for epoch in range(epoch_amount) :
+        model.loss(x,y).backward()
+        optimizer.step()
+        optimizer.zero_grad()
+        current+=1
+        print("  ",int(current*frac), "%", end='\r')
+
+    
+
+
+    print("W = %s, b = %s, loss = %s" % (model.W[0].item(), model.b[0].item(), model.loss(x, y).item()))
+    
+    x = x.to("cpu").numpy()
+    y = y.to("cpu").numpy()
+    model.W = model.W.to("cpu").detach().numpy()
+    model.b = model.b.to("cpu").detach().numpy()
+
+    plot = plt.axes(projection="3d")
+    plot.plot3D(x[:,0],x[:,1],y[:,0],'o')
+    plot.set_xlabel(headers[0])
+    plot.set_ylabel(headers[1])
+    plot.set_zlabel(headers[2])
+    plt.show()
+    
+
+def performLinearRegression(data_list) :
+
+    if len(data_list[0]) == 2 :
+        linear2d(data_list)
+
+    if len(data_list[0]) == 3 :
+        linear3d(data_list)
