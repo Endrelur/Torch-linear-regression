@@ -1,6 +1,7 @@
 import csv
 import os.path
 import linear_regression
+import non_linear_regression
 
 debug = False
 print("** linear regression v1 **")
@@ -17,28 +18,46 @@ def loadData(filePath):
         dataList.append(row)
     csvFile.close()
     return dataList
-    
 
-gotfile = False
-data = []
-while not gotfile :    
-    print("Type in the full filename of the csv datafile:")
-  #  fileName = input("filename: ")
-  #TODO: use input
-    fileName = "day_length_weight.csv"
-    if fileName.endswith(".csv") :
+def RepresentsInt(s):
+    try: 
+        int(s)
+        return True
+    except ValueError:
+        return False
 
-        fullPath = os.path.dirname(os.path.abspath(__file__))+'/data/' + fileName
-        if os.path.isfile(fullPath) :
-            gotfile = True
-            print("loading " + fileName)
-            data = loadData(fullPath)
-        else :
-            print("ERROR: " + fileName + " was not found in the data directory.")
-    else : 
-        print("ERROR: the file should be a .csv file")
+def get_file() :
 
-linear_regression.performLinearRegression(data)
+    print("please choose a file to perform and visualize a linearization of")
+    print("1. length_weight.csv")
+    print("2. day_length_weight.csv")
+    print("3. day_head_circumference.csv (non linear regression)")
+
+    chose_file = False
+    while not chose_file:
+        selection = input("Selection:")
+        if RepresentsInt(selection) :
+            selection = int(selection)
+
+            if selection == 1 :
+                return "length_weight.csv"
+            if selection == 2 :
+                return "day_length_weight.csv"
+            if selection == 3 :
+                return "day_head_circumference.csv"
+            
+data = []   
+fileName = get_file()
+
+fullPath = os.path.dirname(os.path.abspath(__file__))+'/data/' + fileName
+if os.path.isfile(fullPath) :
+    print("loading " + fileName)
+    data = loadData(fullPath)
+
+if fileName == "day_head_circumference.csv" :
+    non_linear_regression.non_linear2d(data)
+else :
+    linear_regression.performLinearRegression(data)
 
 
 

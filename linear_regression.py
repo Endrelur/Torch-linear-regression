@@ -2,6 +2,18 @@ import torch
 import matplotlib.pyplot as plt
 import torch.nn.functional as function
 from mpl_toolkits import mplot3d
+import numpy as np 
+
+'''
+Tar imot både 2 og 3D datasett og utfører lineær regresjon på de.
+'''
+
+#Variable som kan justeres:
+EPOCH_AMOUNT_2D = 100000
+STEP_SIZE_2D    = 0.00015
+
+EPOCH_AMOUNT_3D = 100000
+STEP_SIZE_3D    = 0.0000001
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -19,8 +31,8 @@ class model_2d :
 
 def linear2d (data_list) :
     
-    epoch_amount = 1000000
-    step_size = 0.0001
+    epoch_amount = EPOCH_AMOUNT_2D
+    step_size = STEP_SIZE_2D
 
     print("performing two-dimensional linear regression using "+ device.type)
     print("with " + str(epoch_amount) + " epochs, and a step size of: " + str(step_size))
@@ -79,8 +91,8 @@ class model_3d :
 
 def linear3d(data_list) :
 
-    epoch_amount = 10000
-    step_size = 0.0001
+    epoch_amount = EPOCH_AMOUNT_3D
+    step_size = STEP_SIZE_3D
 
     print("performing three-dimensional linear regression using "+ device.type)
     print("with " + str(epoch_amount) + " epochs, and a step size of: " + str(step_size))
