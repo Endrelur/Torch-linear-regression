@@ -2,12 +2,12 @@ import torch
 import matplotlib.pyplot as plt
 import torch.nn.functional as func
 
-'''
-Får ikke dette til å fungere matrisemultiplikasjonen blir bare
-feil hvis jeg følger oppskriften publisert på forelesningsfoilene!
-'''
-device = torch.device("cuda" if not torch.cuda.is_available() else "cpu")
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+#Variable som kan justeres
+EPOCH_AMOUNT = 1000000
+STEP_SIZE = 0.00015
 
 class non_linear_model :
     def __init__(self) :
@@ -16,16 +16,16 @@ class non_linear_model :
 
     #Matrix multiplication error
     def f(self, x):
-        return 20*torch.sigmoid(x)@(x*self.W+self.b)+31
+        return 20*torch.sigmoid(x*self.W+self.b)+31
 
     #must be used with logical regression, not sure if this applies.
     def loss(self, x, y):
-        return func.binary_cross_entropy(self.f(x),y) 
+        return func.mse_loss(self.f(x), y)  
 
 def non_linear2d (data_list) :
     
-    epoch_amount = 100000
-    step_size = 0.001
+    epoch_amount = EPOCH_AMOUNT
+    step_size = STEP_SIZE
 
     print("performing two-dimensional linear regression using "+ device.type)
     print("with " + str(epoch_amount) + " epochs, and a step size of: " + str(step_size))
