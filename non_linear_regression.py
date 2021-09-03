@@ -6,8 +6,8 @@ import torch.nn.functional as func
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 #Variable som kan justeres
-EPOCH_AMOUNT = 100000
-STEP_SIZE = 0.00015
+EPOCH_AMOUNT = 1500000
+STEP_SIZE = 0.000015
 
 class non_linear_model :
     def __init__(self) :
@@ -27,7 +27,7 @@ def non_linear2d (data_list) :
     epoch_amount = EPOCH_AMOUNT
     step_size = STEP_SIZE
 
-    print("performing two-dimensional linear regression using "+ device.type)
+    print("performing two-dimensional non linear regression using "+ device.type)
     print("with " + str(epoch_amount) + " epochs, and a step size of: " + str(step_size))
     model = non_linear_model()
     headers = data_list.pop(0)
