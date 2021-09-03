@@ -6,8 +6,8 @@ import torch.nn.functional as func
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 #Variable som kan justeres
-EPOCH_AMOUNT = 1500000
-STEP_SIZE = 0.000015
+EPOCH_AMOUNT = 100000
+STEP_SIZE = 0.0000013
 
 class non_linear_model :
     def __init__(self) :

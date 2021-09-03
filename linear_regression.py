@@ -13,7 +13,7 @@ EPOCH_AMOUNT_2D = 100000
 STEP_SIZE_2D    = 0.00015
 
 EPOCH_AMOUNT_3D = 1500000
-STEP_SIZE_3D    = 0.0002
+STEP_SIZE_3D    = 0.00011
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
