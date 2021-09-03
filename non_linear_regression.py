@@ -44,6 +44,7 @@ def non_linear2d (data_list) :
 
     
     frac = 100/epoch_amount
+    print_amount = epoch_amount/100
     current = 0
 
     for epoch in range(epoch_amount) :
@@ -51,7 +52,8 @@ def non_linear2d (data_list) :
         optimizer.step()
         optimizer.zero_grad()
         current+=1
-        print("  ",int(current*frac), "%", end='\r')
+        if (current/print_amount).is_integer():    
+            print("  ",int(current*frac), "%", end='\r')
 
     x = x.to("cpu")
     y = y.to("cpu")

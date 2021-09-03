@@ -12,8 +12,8 @@ Tar imot både 2 og 3D datasett og utfører lineær regresjon på de.
 EPOCH_AMOUNT_2D = 100000
 STEP_SIZE_2D    = 0.00015
 
-EPOCH_AMOUNT_3D = 100000
-STEP_SIZE_3D    = 0.0000001
+EPOCH_AMOUNT_3D = 1500000
+STEP_SIZE_3D    = 0.0002
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -50,8 +50,9 @@ def linear2d (data_list) :
 
     optimizer = torch.optim.SGD([model.W,model.b],step_size)
 
-    
+
     frac = 100/epoch_amount
+    print_amount = epoch_amount/100
     current = 0
 
     for epoch in range(epoch_amount) :
@@ -59,7 +60,8 @@ def linear2d (data_list) :
         optimizer.step()
         optimizer.zero_grad()
         current+=1
-        print("  ",int(current*frac), "%", end='\r')
+        if (current/print_amount).is_integer():    
+            print("  ",int(current*frac), "%", end='\r')
 
     x = x.to("cpu")
     y = y.to("cpu")
@@ -101,8 +103,8 @@ def linear3d(data_list) :
     x_data = []
     y_data = []
     for row in data_list:
-            x_data.append([float(row[0]),float(row[1])])
-            y_data.append([float(row[2])])
+            x_data.append([float(row[1]),float(row[2])])
+            y_data.append([float(row[0])])
  
     x = torch.tensor(x_data,dtype=torch.float32, device=device).reshape(-1,2)
     y = torch.tensor(y_data,dtype=torch.float32, device=device).reshape(-1,1)
@@ -111,6 +113,7 @@ def linear3d(data_list) :
 
     
     frac = 100/epoch_amount
+    print_amount = epoch_amount/100
     current = 0
 
     for epoch in range(epoch_amount) :
@@ -118,7 +121,8 @@ def linear3d(data_list) :
         optimizer.step()
         optimizer.zero_grad()
         current+=1
-        print("  ",int(current*frac), "%", end='\r')
+        if (current/print_amount).is_integer():    
+            print("  ",int(current*frac), "%", end='\r')
 
     
 
@@ -132,9 +136,9 @@ def linear3d(data_list) :
 
     plot = plt.axes(projection="3d")
     plot.plot3D(x[:,0],x[:,1],y[:,0],'o')
-    plot.set_xlabel(headers[0])
-    plot.set_ylabel(headers[1])
-    plot.set_zlabel(headers[2])
+    plot.set_xlabel(headers[1])
+    plot.set_ylabel(headers[2])
+    plot.set_zlabel(headers[0])
     plt.show()
     
 
